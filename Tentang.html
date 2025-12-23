@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tentang - Peta Desa Kaliwinasuh</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #1e40af;
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            background-color: rgba(13, 110, 253, 0.95) !important;
+        }
+
+        .navbar-scrolled {
+            background-color: rgba(13, 110, 253, 1) !important;
+            box-shadow: 0 6px 12px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar-brand {
+            transition: transform 0.3s ease;
+            font-size: 1.4rem;
+        }
+
+        .navbar-brand:hover {
+            transform: rotate(-2deg) scale(1.05);
+        }
+
+        .nav-link {
+            position: relative;
+            padding-bottom: 5px;
+            font-weight: 500;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: #ffffff;
+            transition: all 0.3s ease-in-out;
+            transform: translateX(-50%);
+            opacity: 0;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+            opacity: 1;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+            color: #fff !important;
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+            opacity: 1;
+            background-color: #ffeb3b;
+        }
+
+        .nav-link.active {
+            font-weight: 700;
+        }
+
+        .nav-link:active {
+            transform: scale(0.95) translateY(0);
+            transition: transform 0.1s;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.95), rgba(30, 64, 175, 0.9));
+            color: white;
+            padding: 100px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(10deg);
+            }
+        }
+
+        .hero-icon {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 20px rgba(255, 255, 255, 0);
+            }
+        }
+
+        /* Content Cards */
+        .content-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .content-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border: none;
+        }
+
+        .card-header-custom h3 {
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .card-body-custom {
+            padding: 30px;
+        }
+
+        /* Icon Boxes */
+        .icon-box {
+            display: flex;
+            align-items: flex-start;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .icon-box:hover {
+            background: #e9ecef;
+            transform: translateX(10px);
+        }
+
+        .icon-box i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-right: 20px;
+            min-width: 50px;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #667eea, #764ba2);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .timeline-content {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .timeline-icon {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: 0 0 0 4px white;
+        }
+
+        /* Law List */
+        .law-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .law-list li {
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .law-list li:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .law-list i {
+            color: #ffc107;
+            margin-right: 10px;
+        }
+
+        /* Map Features */
+        .map-feature {
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+            height: 100%;
+        }
+
+        .map-feature:hover {
+            transform: translateY(-10px) rotate(2deg);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .map-feature-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .footer-icon {
+            transition: all 0.3s ease;
+        }
+
+        .footer-icon:hover {
+            transform: scale(1.2) rotate(5deg);
+            color: #667eea !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 30px;
+            }
+
+            .timeline-icon {
+                left: 30px;
+            }
+
+            .hero-banner {
+                padding: 60px 0 40px;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top" id="mainNavbar">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-map-marked-alt me-2"></i>PETA DESA
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Desa Kaliwinasuh/Desa.html">Peta Desa</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Kecamatan Purwareja Klampok/Kecamatan.html">Peta
+                            Kecamatan</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="Tentang.html">Tentang</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Banner -->
+    <section class="hero-banner text-center">
+        <div class="container position-relative">
+            <div class="hero-icon" data-aos="zoom-in">
+                <i class="fas fa-info-circle fa-3x text-primary"></i>
+            </div>
+            <h1 class="display-4 fw-bold mb-3" data-aos="fade-up">Tentang Sistem Peta Digital</h1>
+            <p class="lead" data-aos="fade-up" data-aos-delay="100">
+                Transparansi Data Spasial untuk Pembangunan Berkelanjutan
+            </p>
+        </div>
+    </section>
+
+    <!-- Introduction Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="content-card" data-aos="fade-up">
+                        <div class="card-header-custom">
+                            <h3><i class="fas fa-book-open me-2"></i>Pengantar</h3>
+                        </div>
+                        <div class="card-body-custom">
+                            <p class="lead mb-4">
+                                Sistem Informasi Geografis (SIG) merupakan solusi digital untuk pengelolaan data spasial
+                                wilayah yang transparan dan akurat.
+                            </p>
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <div class="icon-box">
+                                        <i class="fas fa-map"></i>
+                                        <div>
+                                            <h5 class="mb-2">Peta Desa Kaliwinasuh</h5>
+                                            <p class="text-muted mb-0">Pemetaan detail wilayah desa meliputi batas
+                                                administrasi, penggunaan lahan, infrastruktur, dan potensi desa secara
+                                                komprehensif.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="icon-box">
+                                        <i class="fas fa-map-marked-alt"></i>
+                                        <div>
+                                            <h5 class="mb-2">Peta Kecamatan</h5>
+                                            <p class="text-muted mb-0">Pemetaan tingkat kecamatan yang mencakup seluruh
+                                                desa, jaringan jalan, dan fasilitas publik di Kecamatan Purwareja
+                                                Klampok.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 p-4 bg-light rounded">
+                                <h5 class="text-primary mb-3"><i class="fas fa-bullseye me-2"></i>Tujuan Utama</h5>
+                                <ul class="mb-0">
+                                    <li class="mb-2">Menyediakan data spasial yang akurat dan mudah diakses</li>
+                                    <li class="mb-2">Mendukung perencanaan pembangunan desa (Musrenbangdes)</li>
+                                    <li class="mb-2">Meningkatkan transparansi informasi publik</li>
+                                    <li class="mb-2">Memfasilitasi pengambilan keputusan berbasis data</li>
+                                    <li>Mengintegrasikan data antar tingkat pemerintahan</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Features Section -->
+    <section class="py-5 bg-white">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="display-6 fw-bold mb-3">Fitur Peta Digital</h2>
+                <p class="lead text-muted">Teknologi Modern untuk Kemudahan Akses Data</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="map-feature">
+                        <div class="map-feature-icon">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <h4 class="mb-3">Multi-Layer</h4>
+                        <p class="text-muted">Tampilkan berbagai layer data seperti batas wilayah, jalan, bangunan, dan
+                            penggunaan lahan secara bersamaan atau terpisah.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="map-feature">
+                        <div class="map-feature-icon">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                        <h4 class="mb-3">Zoom Interaktif</h4>
+                        <p class="text-muted">Fitur zoom in/out yang responsif untuk melihat detail area dengan tingkat
+                            ketelitian yang berbeda-beda sesuai kebutuhan.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="map-feature">
+                        <div class="map-feature-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <h4 class="mb-3">Pop-up Info</h4>
+                        <p class="text-muted">Informasi detail tentang setiap objek di peta dapat diakses dengan mudah
+                            melalui fitur pop-up yang informatif.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="map-feature">
+                        <div class="map-feature-icon">
+                            <i class="fas fa-search-location"></i>
+                        </div>
+                        <h4 class="mb-3">Pencarian Lokasi</h4>
+                        <p class="text-muted">Temukan lokasi spesifik dengan cepat menggunakan fitur pencarian yang
+                            akurat berbasis alamat atau koordinat.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="map-feature">
+                        <div class="map-feature-icon">
+                            <i class="fas fa-satellite"></i>
+                        </div>
+                        <h4 class="mb-3">Mode Peta</h4>
+                        <p class="text-muted">Pilihan tampilan peta satelit, terrain, dan hybrid untuk visualisasi yang
+                            optimal sesuai kebutuhan analisis.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="map-feature">
+                        <div class="map-feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h4 class="mb-3">Responsive</h4>
+                        <p class="text-muted">Akses peta dengan nyaman dari berbagai perangkat: desktop, tablet, maupun
+                            smartphone dengan tampilan optimal.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Legal Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="content-card" data-aos="fade-up">
+                        <div class="card-header-custom">
+                            <h3><i class="fas fa-gavel me-2"></i>Landasan Hukum</h3>
+                        </div>
+                        <div class="card-body-custom">
+                            <p class="text-muted mb-4">
+                                Pengelolaan data dan informasi desa didasarkan pada regulasi nasional dan daerah untuk
+                                memastikan keabsahan dan transparansi:
+                            </p>
+                            <ul class="law-list">
+                                <li data-aos="fade-right" data-aos-delay="100">
+                                    <i class="fas fa-gavel"></i>
+                                    <strong>UU No. 6 Tahun 2014</strong> tentang Desa - Mengatur kewenangan dan tata
+                                    kelola pemerintahan desa
+                                </li>
+                                <li data-aos="fade-right" data-aos-delay="200">
+                                    <i class="fas fa-gavel"></i>
+                                    <strong>UU No. 14 Tahun 2008</strong> tentang Keterbukaan Informasi Publik -
+                                    Menjamin akses masyarakat terhadap informasi
+                                </li>
+                                <li data-aos="fade-right" data-aos-delay="300">
+                                    <i class="fas fa-gavel"></i>
+                                    <strong>Perpres No. 39 Tahun 2019</strong> tentang Satu Data Indonesia - Integrasi
+                                    dan standardisasi data nasional
+                                </li>
+                                <li data-aos="fade-right" data-aos-delay="400">
+                                    <i class="fas fa-gavel"></i>
+                                    <strong>Peraturan Bupati Banjarnegara</strong> tentang Batas Wilayah dan Tata Kelola
+                                    Desa
+                                </li>
+                                <li data-aos="fade-right" data-aos-delay="500">
+                                    <i class="fas fa-gavel"></i>
+                                    <strong>Peraturan Desa Kaliwinasuh</strong> tentang Rencana Pembangunan Jangka
+                                    Menengah Desa (RPJMDes)
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="py-5 bg-white">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="display-6 fw-bold mb-3">Manfaat Sistem</h2>
+                <p class="lead text-muted">Dampak Positif untuk Berbagai Stakeholder</p>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item" data-aos="fade-right">
+                    <div class="timeline-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="timeline-content" style="margin-right: 55%;">
+                        <h4 class="mb-3">Untuk Masyarakat</h4>
+                        <ul class="mb-0">
+                            <li>Akses mudah ke informasi wilayah</li>
+                            <li>Transparansi pembangunan desa</li>
+                            <li>Partisipasi dalam perencanaan</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item" data-aos="fade-left">
+                    <div class="timeline-icon">
+                        <i class="fas fa-landmark"></i>
+                    </div>
+                    <div class="timeline-content" style="margin-left: 55%;">
+                        <h4 class="mb-3">Untuk Pemerintah Desa</h4>
+                        <ul class="mb-0">
+                            <li>Data akurat untuk perencanaan</li>
+                            <li>Monitoring pembangunan real-time</li>
+                            <li>Efisiensi administrasi</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item" data-aos="fade-right">
+                    <div class="timeline-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="timeline-content" style="margin-right: 55%;">
+                        <h4 class="mb-3">Untuk Pembangunan</h4>
+                        <ul class="mb-0">
+                            <li>Perencanaan berbasis data</li>
+                            <li>Prioritas yang tepat sasaran</li>
+                            <li>Evaluasi berkelanjutan</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-white py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+                    <h5 class="text-uppercase mb-3 fw-bold">
+                        <i class="fas fa-map-marked-alt me-2"></i>Peta Desa
+                    </h5>
+                    <p class="text-light">Portal informasi geospasial untuk transparansi dan kemudahan akses data
+                        wilayah.</p>
+                </div>
+                <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
+                    <h5 class="text-uppercase mb-3 fw-bold">Kontak</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-envelope me-2 footer-icon"></i>
+                            admin@kaliwinasuh.desa.id
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-phone me-2 footer-icon"></i>
+                            (0286) 123456
+                        </li>
+                        <li>
+                            <i class="fas fa-map-marker-alt me-2 footer-icon"></i>
+                            Desa Kaliwinasuh, Purwareja Klampok
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="300">
+                    <h5 class="text-uppercase mb-3 fw-bold">Tautan</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="index.html" class="text-light text-decoration-none"><i
+                                    class="fas fa-angle-right me-2"></i>Beranda</a></li>
+                        <li class="mb-2"><a href="Desa Kaliwinasuh/Desa.html" class="text-light text-decoration-none"><i
+                                    class="fas fa-angle-right me-2"></i>Peta Desa</a></li>
+                        <li class="mb-2"><a href="Kecamatan.html" class="text-light text-decoration-none"><i
+                                    class="fas fa-angle-right me-2"></i>Peta Kecamatan</a></li>
+                        <li class="mb-2"><a href="Tentang.html" class="text-light text-decoration-none"><i
+                                    class="fas fa-angle-right me-2"></i>Tentang</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="border-secondary my-4">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2025 Peta Desa. Pemerintah Desa Kaliwinasuh. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function () {
+            const navbar = document.getElementById('mainNavbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('navbar-scrolled');
+            } else {
+                navbar.classList.remove('navbar-scrolled');
+            }
+        });
+    </script>
+</body>
+
+</html>

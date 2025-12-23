@@ -1,0 +1,1 @@
+var json_PosisiRumahSaya_25 = {"type":"FeatureCollection","name":"PosisiRumahSaya_25","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}},"features":[{"type":"Feature","properties":{"id":"1","Rumah Saya":"Ini Rumah Saya"},"geometry":{"type":"Point","coordinates":[109.447475722708589,-7.475612235899869]}}]}

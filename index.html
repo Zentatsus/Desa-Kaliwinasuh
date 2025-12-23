@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beranda - Peta Desa Kaliwinasuh</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #1e40af;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            background-color: rgba(13, 110, 253, 0.95) !important;
+        }
+
+        .navbar-scrolled {
+            background-color: rgba(13, 110, 253, 1) !important;
+            box-shadow: 0 6px 12px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar-brand {
+            transition: transform 0.3s ease;
+            font-size: 1.4rem;
+        }
+
+        .navbar-brand:hover {
+            transform: rotate(-2deg) scale(1.05);
+        }
+
+        .nav-link {
+            position: relative;
+            padding-bottom: 5px;
+            font-weight: 500;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: #ffffff;
+            transition: all 0.3s ease-in-out;
+            transform: translateX(-50%);
+            opacity: 0;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+            opacity: 1;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+            color: #fff !important;
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+            opacity: 1;
+            background-color: #ffeb3b;
+        }
+
+        .nav-link.active {
+            font-weight: 700;
+        }
+
+        .nav-link:active {
+            transform: scale(0.95) translateY(0);
+            transition: transform 0.1s;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.95), rgba(30, 64, 175, 0.9)),
+                url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            padding: 150px 0 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .hero-section h1 {
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-btn {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 0;
+            /* Mengurangi jarak atas-bawah section */
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border-radius: 15px;
+            /* Radius sudut sedikit diperkecil agar proporsional */
+            padding: 15px 10px;
+            /* Padding dalam diperkecil drastis */
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            height: 100%;
+            border-bottom: 4px solid transparent;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            /* Gerakan naik saat hover tidak terlalu tinggi */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            border-bottom: 4px solid #764ba2;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            /* Ukuran ikon diperkecil (dari 3.5rem) */
+            margin-bottom: 5px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            /* Standard property for compatibility */
+            -webkit-text-fill-color: transparent;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+
+            /* Lompatan ikon diperpendek */
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            /* Ukuran angka diperkecil (dari 2.5rem) */
+            font-weight: 800;
+            margin: 5px 0;
+            color: #333;
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            /* Tulisan label lebih kecil */
+            letter-spacing: 0.5px;
+        }
+
+        /* Feature Cards */
+        .feature-card {
+            transition: all 0.4s ease;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            /* Standard property for compatibility */
+            -webkit-text-fill-color: transparent;
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes iconFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Info Section */
+        .info-section {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .info-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .info-list li:hover {
+            padding-left: 10px;
+            color: var(--primary-color);
+        }
+
+        .info-list li i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .footer-icon {
+            transition: all 0.3s ease;
+        }
+
+        .footer-icon:hover {
+            transform: scale(1.2) rotate(5deg);
+            color: #667eea !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 100px 0 60px;
+            }
+
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top" id="mainNavbar">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-map-marked-alt me-2"></i>PETA DESA
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Desa Kaliwinasuh/Desa.html">Peta Desa</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Kecamatan Purwareja Klampok/Kecamatan.html">Peta
+                            Kecamatan</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Tentang.html">Tentang</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section text-center" data-aos="fade-up">
+        <div class="container position-relative">
+            <h1 class="display-3 fw-bold mb-4" data-aos="fade-down" data-aos-delay="100">
+                Satu Peta, Satu Data, Satu Kebijakan
+            </h1>
+            <p class="lead mb-5" data-aos="fade-up" data-aos-delay="200">
+                Portal Informasi Geospasial Desa Kaliwinasuh & Kecamatan Purwareja Klampok, Banjarnegara
+            </p>
+            <div data-aos="zoom-in" data-aos-delay="300">
+                <a href="Desa Kaliwinasuh/Desa.html" class="btn btn-outline-light btn-lg px-5 me-3 mb-3 hero-btn">
+                    <i class="fas fa-map me-2"></i>Peta Desa
+                </a>
+                <a href="Kecamatan Purwareja Klampok/Kecamatan.html"
+                    class="btn btn-outline-light btn-lg px-5 mb-3 hero-btn">
+                    <i class="fas fa-map-marked-alt me-2"></i>Peta Kecamatan
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="container">
+            <div class="text-center mb-4" data-aos="fade-up">
+                <h3 class="fw-bold text-white mb-0" style="font-size: 1.5rem;">Statistik Desa Kaliwinasuh</h3>
+                <p class="text-white-50 small m-0">Data Wilayah & Kependudukan Terkini</p>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-users"></i></div>
+                        <div class="stat-number">5.234</div>
+                        <div class="stat-label">Jiwa</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-home"></i></div>
+                        <div class="stat-number">1.456</div>
+                        <div class="stat-label">Kepala Keluarga</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-map"></i></div>
+                        <div class="stat-number">12,5 km²</div>
+                        <div class="stat-label">Luas Wilayah</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-layer-group"></i></div>
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">Dusun</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Features Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="display-5 fw-bold mb-3">Fitur Unggulan</h2>
+                <p class="lead text-muted">Layanan Digital untuk Transparansi & Kemudahan Akses Data</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card feature-card p-4 text-center">
+                        <div class="card-body">
+                            <div class="feature-icon">
+                                <i class="fas fa-search-location"></i>
+                            </div>
+                            <h3 class="card-title h4 mb-3">Peta Interaktif</h3>
+                            <p class="card-text text-muted">Akses data spasial Desa Kaliwinasuh seperti batas wilayah,
+                                lahan pertanian, dan infrastruktur dengan mudah melalui peta interaktif.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card feature-card p-4 text-center">
+                        <div class="card-body">
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h3 class="card-title h4 mb-3">Data & Statistik</h3>
+                            <p class="card-text text-muted">Informasi terkini, transparansi anggaran, dan data statistik
+                                pembangunan terkait wilayah Desa Kaliwinasuh secara lengkap.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card feature-card p-4 text-center">
+                        <div class="card-body">
+                            <div class="feature-icon">
+                                <i class="fas fa-network-wired"></i>
+                            </div>
+                            <h3 class="card-title h4 mb-3">Integrasi Data</h3>
+                            <p class="card-text text-muted">Integrasi data antara Pemerintah Desa, Kecamatan Purwareja
+                                Klampok, dan Kabupaten Banjarnegara untuk sinkronisasi optimal.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Section -->
+    <section class="info-section py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <div class="info-card">
+                        <h3 class="h4 fw-bold">
+                            <i class="fas fa-map-marker-alt me-2"></i>Tentang Desa Kaliwinasuh
+                        </h3>
+                        <p class="text-muted mb-4">
+                            Desa Kaliwinasuh merupakan salah satu desa di Kecamatan Purwareja Klampok yang terletak di
+                            wilayah Kabupaten Banjarnegara, Jawa Tengah.
+                        </p>
+                        <ul class="info-list">
+                            <li><i class="fas fa-check-circle"></i>Luas Wilayah: ±12,5 km²</li>
+                            <li><i class="fas fa-check-circle"></i>Jumlah Penduduk: ±5.234 jiwa</li>
+                            <li><i class="fas fa-check-circle"></i>Jumlah Dusun: 5 Dusun</li>
+                            <li><i class="fas fa-check-circle"></i>Mata Pencaharian: Pertanian & Perkebunan</li>
+                            <li><i class="fas fa-check-circle"></i>Potensi: Padi, Jagung, Singkong</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-6" data-aos="fade-left">
+                    <div class="info-card">
+                        <h3 class="h4 fw-bold">
+                            <i class="fas fa-building me-2"></i>Kecamatan Purwareja Klampok
+                        </h3>
+                        <p class="text-muted mb-4">
+                            Kecamatan Purwareja Klampok adalah salah satu dari 20 kecamatan di Kabupaten Banjarnegara
+                            dengan karakteristik wilayah dataran rendah hingga perbukitan.
+                        </p>
+                        <ul class="info-list">
+                            <li><i class="fas fa-check-circle"></i>Jumlah Desa: 8 Desa</li>
+                            <li><i class="fas fa-check-circle"></i>Pusat Pemerintahan: Klampok</li>
+                            <li><i class="fas fa-check-circle"></i>Akses Transportasi: Jalur Pantura</li>
+                            <li><i class="fas fa-check-circle"></i>Ekonomi: Perdagangan & Pertanian</li>
+                            <li><i class="fas fa-check-circle"></i>Fasilitas: Sekolah, Puskesmas, Pasar</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-white py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+                    <h5 class="text-uppercase mb-3 fw-bold">
+                        <i class="fas fa-map-marked-alt me-2"></i>Peta Desa
+                    </h5>
+                    <p class="text-light">Portal informasi geospasial untuk transparansi dan kemudahan akses data
+                        wilayah Desa Kaliwinasuh dan Kecamatan Purwareja Klampok.</p>
+                </div>
+                <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
+                    <h5 class="text-uppercase mb-3 fw-bold">Kontak</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-envelope me-2 footer-icon"></i>
+                            admin@kaliwinasuh.desa.id
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-phone me-2 footer-icon"></i>
+                            (0286) 123456
+                        </li>
+                        <li>
+                            <i class="fas fa-map-marker-alt me-2 footer-icon"></i>
+                            Desa Kaliwinasuh, Kec. Purwareja Klampok
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="300">
+                    <h5 class="text-uppercase mb-3 fw-bold">Tautan</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="index.html" class="text-light text-decoration-none"><i
+                                    class="fas fa-angle-right me-2"></i>Beranda</a></li>
+                        <li class="mb-2"><a href="Desa Kaliwinasuh/Desa.html" class="text-light text-decoration-none"><i
+                                    class="fas fa-angle-right me-2"></i>Peta Desa</a></li>
+                        <li class="mb-2"><a href="Kecamatan.html" class="text-light text-decoration-none"><i
+                                    class="fas fa-angle-right me-2"></i>Peta Kecamatan</a></li>
+                        <li class="mb-2"><a href="Tentang.html" class="text-light text-decoration-none"><i
+                                    class="fas fa-angle-right me-2"></i>Tentang</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="border-secondary my-4">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2025 Peta Desa. Aqilla Rhiu Patra Wibowo. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function () {
+            const navbar = document.getElementById('mainNavbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('navbar-scrolled');
+            } else {
+                navbar.classList.remove('navbar-scrolled');
+            }
+        });
+
+        // Counter animation
+        function animateCounter(element, target) {
+            let current = 0;
+            const increment = target / 100;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target.toLocaleString('id-ID');
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current).toLocaleString('id-ID');
+                }
+            }, 20);
+        }
+
+        // Trigger counter when section is visible
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counters = entry.target.querySelectorAll('.stat-number');
+                    counters.forEach(counter => {
+                        const target = parseFloat(counter.textContent.replace(/\./g, '').replace(',', '.'));
+                        animateCounter(counter, target);
+                    });
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+
+        const statsSection = document.querySelector('.stats-section');
+        if (statsSection) observer.observe(statsSection);
+    </script>
+</body>
+
+</html>
