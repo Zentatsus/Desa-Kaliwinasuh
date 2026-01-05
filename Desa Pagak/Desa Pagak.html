@@ -1,0 +1,907 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Peta Desa Pagak</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="css/leaflet.css">
+    <link rel="stylesheet" href="css/qgis2web.css">
+
+    <style>
+        /* --- LAYOUT UTAMA --- */
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+/* Styling Dropdown Menu */
+.dropdown-menu {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    padding: 8px 0;
+    margin-top: 10px;
+    /* Animasi muncul halus */
+    animation: fadeIn 0.3s ease;
+}
+
+/* Item di dalam dropdown */
+.dropdown-item {
+    padding: 10px 20px;
+    font-weight: 500;
+    color: #124170; /* Warna biru tua */
+    transition: all 0.2s;
+}
+
+/* Efek Hover */
+.dropdown-item:hover {
+    background-color: #124170; /* Background biru saat hover */
+    color: #ffffff; /* Teks putih saat hover */
+    transform: translateX(5px); /* Geser sedikit ke kanan */
+}
+
+/* Keyframes untuk animasi */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+        /* Navbar Gradient */
+        .navbar {
+            background: linear-gradient(135deg, #124170 0%, #26667F 100%);
+            box-shadow: 0 4px 15px rgba(18, 65, 112, 0.3);
+            z-index: 2000;
+            padding: 10px 20px;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: #ffffff !important;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.02);
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 600;
+            padding: 8px 16px !important;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin: 0 5px;
+        }
+
+        .nav-link:hover {
+            color: #ffffff !important;
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            color: #ffffff !important;
+            background-color: rgba(255, 255, 255, 0.25);
+            font-weight: 700;
+        }
+
+        .navbar-toggler {
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 5px;
+            color: #ffffff;
+        }
+
+        /* Map Container */
+        #map {
+            width: 100%;
+            height: calc(100vh - 66px);
+            z-index: 1;
+            background: #DDF4E7;
+        }
+
+        /* Marker Pin Style */
+        .marker-pin {
+            width: 32px;
+            height: 32px;
+            border-radius: 50% 50% 50% 0;
+            background: #124170;
+            position: absolute;
+            transform: rotate(-45deg);
+            left: 50%;
+            top: 50%;
+            margin: -16px 0 0 -16px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+            border: 2px solid white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .marker-pin::after {
+            content: '';
+            width: 24px;
+            height: 24px;
+            margin: 4px 0 0 4px;
+            background: #fff;
+            position: absolute;
+            border-radius: 50%;
+        }
+
+        .marker-icon {
+            transform: rotate(45deg);
+            color: #124170;
+            font-size: 14px;
+            z-index: 10;
+            position: relative;
+            top: -2px;
+            left: 1px;
+        }
+
+        /* Controls */
+        .btn-menu-layer {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: white;
+            border: none;
+            color: #1B211A;
+            box-shadow: 0 4px 12px rgba(18, 65, 112, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.4s;
+        }
+
+        .btn-menu-layer.active {
+            transform: rotate(180deg);
+            background: #26667F;
+            color: white;
+        }
+
+        .custom-map-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .map-btn {
+            width: 40px;
+            height: 40px;
+            background-color: #fff;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(18, 65, 112, 0.15);
+            color: #1B211A;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .map-btn:hover {
+            background-color: #124170;
+            color: #fff;
+        }
+
+        /* Panel Katalog */
+        .katalog-panel {
+            position: absolute;
+            top: 20px;
+            left: 80px;
+            width: 320px;
+            max-height: calc(100vh - 100px);
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(27, 33, 26, 0.15);
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(-450px);
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.3s ease;
+        }
+
+        .katalog-panel.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .katalog-header {
+            background: #124170;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px 12px 0 0;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .katalog-body {
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            position: relative;
+        }
+
+        /* Search Box */
+        .search-wrapper {
+            position: relative;
+            margin-bottom: 5px;
+            z-index: 10;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border-radius: 30px;
+            border: 2px solid #DDF4E7;
+            background: #fff;
+            outline: none;
+            transition: all 0.3s;
+            font-size: 14px;
+            color: #1B211A;
+        }
+
+        .search-input:focus {
+            border-color: #26667F;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(38, 102, 127, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #26667F;
+        }
+
+        #search-results {
+            position: absolute;
+            top: 55px;
+            left: 0;
+            width: 100%;
+            max-height: 250px;
+            overflow-y: auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(27, 33, 26, 0.1);
+            border: 1px solid #DDF4E7;
+            display: none;
+            z-index: 2000;
+        }
+
+        .result-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            transition: 0.1s;
+            color: #1B211A;
+        }
+
+        .result-item:hover {
+            background: #DDF4E7;
+            color: #124170;
+            border-left: 4px solid #124170;
+            padding-left: 11px;
+        }
+
+        .result-icon-box {
+            width: 30px;
+            height: 30px;
+            background: #DDF4E7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #124170;
+        }
+
+        .result-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .result-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #1B211A;
+        }
+
+        .result-sub {
+            font-size: 11px;
+            color: #26667F;
+        }
+
+        /* Layer List */
+        .layer-group-title {
+            font-size: 11px;
+            font-weight: 800;
+            color: #26667F;
+            text-transform: uppercase;
+            margin-top: 15px;
+            letter-spacing: 1px;
+        }
+
+        .layer-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border: 1px solid #DDF4E7;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #1B211A;
+        }
+
+        .layer-item:hover {
+            background: #DDF4E7;
+            border-color: #26667F;
+        }
+
+        .form-check-input {
+            cursor: pointer;
+        }
+
+        /* Footer */
+        .footer-info {
+            position: absolute;
+            bottom: 25px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: flex-end;
+            gap: 20px;
+        }
+
+        .coords-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #1B211A;
+            font-family: monospace;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .compass-container {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .compass-arrow {
+            position: absolute;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 20px solid #DC0E0E;
+            transform: translateY(-8px);
+        }
+
+        .compass-arrow-s {
+            position: absolute;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 20px solid #26667F;
+            transform: translateY(8px);
+        }
+
+        .compass-label {
+            position: absolute;
+            font-size: 9px;
+            font-weight: 800;
+            color: #1B211A;
+        }
+
+        .label-n {
+            top: 2px;
+            color: #DC0E0E;
+        }
+
+        .label-s {
+            bottom: 2px;
+            color: #26667F;
+        }
+
+        .label-e {
+            right: 4px;
+        }
+
+        .label-w {
+            left: 4px;
+        }
+
+        /* Popup */
+        .custom-popup .leaflet-popup-content-wrapper {
+            padding: 0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .popup-header {
+            background: #124170;
+            color: white;
+            padding: 12px 15px;
+            font-weight: bold;
+        }
+
+        .popup-body {
+            padding: 15px;
+            background: #f8f9fa;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .popup-row {
+            padding: 8px 12px;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border-left: 3px solid #26667F;
+        }
+
+        .map-label {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            font-size: 11px;
+            font-weight: 800;
+            color: #1B211A;
+            text-align: center;
+            text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, 2px 2px 3px rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+        }
+
+        @media (max-width: 991px) {
+            .navbar-collapse {
+                background: white;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                padding: 20px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+                z-index: 2001;
+            }
+
+            #map {
+                height: calc(100vh - 60px);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .katalog-panel {
+                top: 75px;
+                left: 10px;
+                width: calc(100% - 20px);
+                transform: translateX(-120%);
+            }
+
+            .btn-menu-layer,
+            .custom-map-controls {
+                top: 20px;
+            }
+
+            .coords-box {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg fixed-top" id="mainNavbar">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-map-marked-alt me-2"></i>
+                Peta Desa Kaliwinasuh
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Beranda</a>
+                    </li>
+                    <li class="nav-item">
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Peta Desa
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <li>
+            <a class="dropdown-item" href="../Desa Kaliwinasuh/Desa Kaliwinasuh.html">
+                <i class="fas fa-map-pin me-2"></i>Desa Kaliwinasuh
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="../Desa Kalimandi/Desa Kalimandi.html">
+                <i class="fas fa-map-pin me-2"></i>Desa Kalimandi
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="../Desa Kecitran/Desa Kecitran.html">
+                <i class="fas fa-map-pin me-2"></i>Desa Kecitran
+            </a>
+        </li>
+                <li>
+            <a class="dropdown-item" href="../Desa Pagak/Desa Pagak.html">
+                <i class="fas fa-map-pin me-2"></i>Desa Pagak
+            </a>
+        </li>
+    </ul>
+</li>                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../Kecamatan Purwareja Klampok/Kecamatan.html">Peta Kecamatan</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../Tentang.html">Tentang</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div style="position: relative; width: 100%;">
+        <button id="menuBtn" class="btn-menu-layer" onclick="toggleMenu()" title="Buka Katalog"><i
+                class="fas fa-bars"></i></button>
+
+        <div class="custom-map-controls">
+            <button class="map-btn" onclick="resetView()" title="Reset Tampilan"><i class="fas fa-home"></i></button>
+            <button class="map-btn" onclick="map.zoomIn()" title="Perbesar"><i class="fas fa-plus"></i></button>
+            <button class="map-btn" onclick="map.zoomOut()" title="Perkecil"><i class="fas fa-minus"></i></button>
+            <button class="map-btn" onclick="locateUser()" id="btnLocate" title="Lokasi Saya"><i
+                    class="fas fa-location-crosshairs"></i></button>
+        </div>
+
+        <div class="katalog-panel" id="katalogPanel">
+            <div class="katalog-header"><i class="fas fa-map-marked-alt"></i> Data & Layer</div>
+            <div class="katalog-body">
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="searchInput" class="search-input"
+                        placeholder="Cari lokasi, jalan, bangunan..." autocomplete="off">
+                    <div id="search-results"></div>
+                </div>
+
+                <div class="layer-group-title">Peta Dasar</div>
+                <div class="layer-item" onclick="switchBaseMap('osm')">
+                    <div class="d-flex align-items-center gap-2"><i class="fas fa-map" style="color:#124170"></i>
+                        <small>OpenStreetMap</small>
+                    </div>
+                    <input class="form-check-input" type="radio" name="basemap" id="radio_osm" checked>
+                </div>
+                <div class="layer-item" onclick="switchBaseMap('streets')">
+                    <div class="d-flex align-items-center gap-2"><i class="fas fa-road" style="color:#26667F"></i>
+                        <small>Google Maps</small>
+                    </div>
+                    <input class="form-check-input" type="radio" name="basemap" id="radio_streets">
+                </div>
+                <div class="layer-item" onclick="switchBaseMap('hybrid')">
+                    <div class="d-flex align-items-center gap-2"><i class="fas fa-satellite" style="color:#1B211A"></i>
+                        <small>Satellite Hybrid</small>
+                    </div>
+                    <input class="form-check-input" type="radio" name="basemap" id="radio_hybrid">
+                </div>
+
+                <div class="layer-group-title">Administrasi</div>
+                <div id="cat-admin"></div>
+
+                <div class="layer-group-title">Infrastruktur</div>
+                <div id="cat-infra"></div>
+
+                <div class="layer-group-title">Fasilitas Umum</div>
+                <div id="cat-facility"></div>
+
+                <div class="layer-group-title">Bangunan & Lainnya</div>
+                <div id="cat-other"></div>
+            </div>
+        </div>
+
+        <div id="map"></div>
+
+        <div class="footer-info">
+            <div class="coords-box" id="coordinates">Lat: -, Lng: -</div>
+            <div class="compass-container" title="Utara">
+                <div class="compass-arrow"></div>
+                <div class="compass-arrow-s"></div>
+                <span class="compass-label label-n">U</span><span class="compass-label label-e">T</span>
+                <span class="compass-label label-s">S</span><span class="compass-label label-w">B</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/qgis2web_expressions.js"></script>
+    <script src="js/leaflet.js"></script>
+    <script src="js/multi-style-layer.js"></script>
+    <script src="js/leaflet.rotatedMarker.js"></script>
+    <script src="js/leaflet.pattern.js"></script>
+    <script src="js/leaflet-hash.js"></script>
+    <script src="js/Autolinker.min.js"></script>
+    <script src="js/rbush.min.js"></script>
+    <script src="js/labelgun.min.js"></script>
+    <script src="js/labels.js"></script>
+    <script src="js/leaflet.photon.js"></script>
+
+    <script src="data/DesaPagak_1.js"></script>
+    <script src="data/BalaiDesaPagak_2.js"></script>
+    <script src="data/building_3.js"></script>
+    <script src="data/JalanPagak_4.js"></script>
+
+    <script>
+        // 1. Inisialisasi Peta
+        var map = L.map('map', { zoomControl: false, maxZoom: 28, minZoom: 13 }).setView([-7.47, 109.46], 14);
+
+        // SETUP PANES (Urutan Tumpukan Layer)
+        map.createPane('pane_admin'); map.getPane('pane_admin').style.zIndex = 400; // Paling Bawah
+        map.createPane('pane_infra'); map.getPane('pane_infra').style.zIndex = 450;
+        map.createPane('pane_facility'); map.getPane('pane_facility').style.zIndex = 600; // Paling Atas
+
+        var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { opacity: 1.0, attribution: 'OSM' });
+        var googleHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', { opacity: 1.0, attribution: 'Google' });
+        var googleStreets = L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', { opacity: 1.0, attribution: 'Google' });
+
+        map.addLayer(osm);
+
+        map.on('mousemove', function (e) { document.getElementById('coordinates').innerHTML = `Lat: ${e.latlng.lat.toFixed(5)}, Lng: ${e.latlng.lng.toFixed(5)}`; });
+
+        function switchBaseMap(type) {
+            map.removeLayer(osm); map.removeLayer(googleHybrid); map.removeLayer(googleStreets);
+            if (type === 'osm') { map.addLayer(osm); document.getElementById('radio_osm').checked = true; }
+            else if (type === 'streets') { map.addLayer(googleStreets); document.getElementById('radio_streets').checked = true; }
+            else { map.addLayer(googleHybrid); document.getElementById('radio_hybrid').checked = true; }
+        }
+
+        // 2. Helpers (Icon & Popup)
+        function createIcon(icon, color) {
+            return L.divIcon({ className: 'custom-div-icon', html: `<div class='marker-pin' style='background:${color} !important'><div class='marker-icon'><i class='${icon}'></i></div></div>`, iconSize: [32, 42], iconAnchor: [16, 42] });
+        }
+        function createPopup(title, icon, fields) {
+            return function (feature) {
+                var p = feature.properties; var rows = '';
+                for (var k in fields) { if (p[fields[k]]) rows += `<div class="popup-row"><span>${k}</span>: <b>${p[fields[k]]}</b></div>`; }
+                return `<div class="popup-header"><i class="${icon}"></i> ${title}</div><div class="popup-body">${rows}</div>`;
+            }
+        }
+
+        // 3. Highlight & Zoom Logic
+        function highlightFeature(e) {
+            var layer = e.target;
+            layer.setStyle({ weight: 3, color: '#DDF4E7', dashArray: '', fillOpacity: 0.5 });
+        }
+        function resetHighlight(e) {
+            var layer = e.target;
+            if (layer.feature.geometry.type.includes('Polygon')) {
+                layer.setStyle({ color: '#124170', weight: 2, fillOpacity: 0.1 });
+                // Khusus Building, warna abu
+                if (layer.feature.geometry.type === 'MultiPolygon' && !layer.feature.properties.Nama) {
+                    layer.setStyle({ color: '#666', weight: 1, fillOpacity: 0.5 });
+                }
+            } else {
+                layer.setStyle({ color: '#f59e0b', weight: 2 });
+            }
+        }
+        function zoomToFeature(e) {
+            var layer = e.target;
+            if (layer.getBounds) { map.fitBounds(layer.getBounds()); }
+            else { map.flyTo(layer.getLatLng(), 19); }
+        }
+
+        // 4. Safe Layer Loading with INTELLIGENT SEARCH
+        var allSearchData = [];
+        var managedLayers = [];
+
+        function loadLayer(dataVar, type, title, icon, color, fields, visible, minZoom, labelField, targetDivId) {
+            if (typeof dataVar === 'undefined' || !dataVar) { console.warn("Missing: " + title); return { layer: null }; }
+
+            var layerPane = 'pane_admin';
+            if (type === 'line') layerPane = 'pane_infra';
+            if (type === 'point') layerPane = 'pane_facility';
+            if (title === 'Bangunan') layerPane = 'pane_admin'; // Building di bawah point
+
+            var layer;
+            var styleFunc = function (f) {
+                if (type === 'line') return { color: color || '#1B211A', weight: 2 };
+                if (type === 'poly') {
+                    return { color: color || '#124170', weight: 2, fillOpacity: 0.1 };
+                }
+            };
+
+            var options = {
+                pane: layerPane,
+                style: styleFunc,
+                onEachFeature: function (f, l) {
+                    var content = createPopup(title, icon, fields)(f);
+                    l.bindPopup(content, { className: 'custom-popup' });
+
+                    if (type !== 'point') {
+                        l.on({ mouseover: highlightFeature, mouseout: resetHighlight, click: zoomToFeature });
+                    } else {
+                        l.on('click', zoomToFeature);
+                    }
+
+                    if (labelField && f.properties[labelField]) {
+                        l.bindTooltip(String(f.properties[labelField]), { permanent: true, direction: "center", className: "map-label" }).closeTooltip();
+                    }
+
+                    // --- SEARCH INDEXING ---
+                    var p = f.properties;
+                    var searchStr = "";
+                    for (var key in p) {
+                        if (p[key]) searchStr += String(p[key]).toLowerCase() + " ";
+                    }
+                    searchStr += title.toLowerCase();
+
+                    var label = p.Nama || p.NAMA || p.name || p.Dusun || p['Nama Jalan'] || title;
+
+                    allSearchData.push({
+                        label: label,
+                        sub: title,
+                        layer: l,
+                        icon: icon || 'fas fa-map-marker-alt',
+                        coords: (type === 'point') ? l.getLatLng() : l.getBounds().getCenter(),
+                        type: type,
+                        bounds: (type !== 'point') ? l.getBounds() : null,
+                        searchStr: searchStr
+                    });
+                }
+            };
+
+            if (type === 'point') {
+                options.pointToLayer = function (f, latlng) { return L.marker(latlng, { icon: createIcon(icon, color || '#124170') }); };
+                delete options.style;
+            }
+
+            layer = L.geoJson(dataVar, options);
+            var layerObj = { layer: layer, minZoom: minZoom || 0, userEnabled: visible, id: title.replace(/\s/g, '') };
+            managedLayers.push(layerObj);
+
+            addCatalogItem(layerObj.id, title, icon, targetDivId, layerObj, visible);
+
+            if (visible) layer.addTo(map);
+            return layerObj;
+        }
+
+        function addCatalogItem(id, label, icon, divId, objLayer, checked) {
+            var div = document.createElement('div'); div.className = 'layer-item';
+            div.innerHTML = `<div class="d-flex align-items-center gap-2" onclick="document.getElementById('${id}').click()"><i class="${icon}" style="color:#26667F"></i> <small>${label}</small></div><div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="${id}" ${checked ? 'checked' : ''}></div>`;
+            var container = document.getElementById(divId);
+            if (container) container.appendChild(div);
+            document.getElementById(id).addEventListener('change', function () { objLayer.userEnabled = this.checked; updateVisibility(); });
+        }
+
+        // --- 5. LOAD LAYERS DESA PAGAK ---
+
+        // Administrasi (Batas Desa)
+        var objDesa = loadLayer(json_DesaPagak_1, 'poly', 'Batas Desa', 'fas fa-map', '#124170', { 'Nama': 'Nama' }, true, 13, 'Nama', 'cat-admin');
+
+        // Infrastruktur (Jalan)
+        loadLayer(json_JalanPagak_4, 'line', 'Jalan Desa', 'fas fa-road', '#f59e0b', {}, true, 14, null, 'cat-infra');
+
+        // Bangunan (Zoom 16+)
+        loadLayer(json_building_3, 'poly', 'Bangunan', 'fas fa-home', '#666', {}, false, 16, null, 'cat-other');
+
+        // Fasilitas (Balai Desa)
+        loadLayer(json_BalaiDesaPagak_2, 'point', 'Balai Desa', 'fas fa-building', '#3b82f6', { 'Nama': 'Nama' }, true, 13, null, 'cat-facility');
+
+        // --- 6. AUTO ZOOM ---
+        setTimeout(function () {
+            if (objDesa && objDesa.layer) {
+                map.fitBounds(objDesa.layer.getBounds());
+            }
+        }, 500);
+
+        // 7. Update Visibility
+        function updateVisibility() {
+            var z = map.getZoom();
+            managedLayers.forEach(i => {
+                if (!i.layer) return;
+                var shouldShow = i.userEnabled && (z >= i.minZoom);
+
+                if (shouldShow) {
+                    if (!map.hasLayer(i.layer)) map.addLayer(i.layer);
+
+                    if (i.layer.eachLayer) {
+                        if (i.id.includes('Desa')) {
+                            if (z >= 13 && z < 15) i.layer.eachLayer(l => l.openTooltip());
+                            else i.layer.eachLayer(l => l.closeTooltip());
+                        }
+                    }
+                } else {
+                    if (map.hasLayer(i.layer)) map.removeLayer(i.layer);
+                }
+            });
+        }
+        map.on('zoomend', updateVisibility);
+        updateVisibility();
+
+        // 8. Search & Menu
+        var searchInput = document.getElementById('searchInput'); var resultsBox = document.getElementById('search-results');
+        searchInput.addEventListener('input', function (e) {
+            var term = e.target.value.toLowerCase(); resultsBox.innerHTML = '';
+            if (term.length < 1) { resultsBox.style.display = 'none'; return; }
+            var matches = allSearchData.filter(item => item.searchStr.includes(term)).slice(0, 10);
+            resultsBox.style.display = 'block';
+            if (matches.length > 0) {
+                matches.forEach(item => {
+                    var div = document.createElement('div'); div.className = 'result-item';
+                    div.innerHTML = `<div class="result-icon-box"><i class="${item.icon}"></i></div><div class="result-info"><span class="result-title">${item.label}</span><span class="result-sub">${item.sub}</span></div>`;
+                    div.onclick = function () {
+                        if (!map.hasLayer(item.layer)) map.addLayer(item.layer);
+
+                        if (item.type === 'point') {
+                            map.flyTo(item.coords, 18);
+                        } else {
+                            if (item.bounds) map.fitBounds(item.bounds);
+                        }
+
+                        setTimeout(() => { item.layer.openPopup(); }, 800);
+                        resultsBox.style.display = 'none'; searchInput.value = item.label;
+                    }; resultsBox.appendChild(div);
+                });
+            } else { resultsBox.innerHTML = '<div style="padding:15px; text-align:center; color:#888; font-size:13px;">Data tidak ditemukan.</div>'; }
+        });
+        document.addEventListener('click', function (e) { if (!document.querySelector('.search-wrapper').contains(e.target)) resultsBox.style.display = 'none'; });
+        function toggleMenu() {
+            var panel = document.getElementById('katalogPanel'); var btn = document.getElementById('menuBtn'); var icon = btn.querySelector('i');
+            panel.classList.toggle('show'); btn.classList.toggle('active');
+            icon.className = btn.classList.contains('active') ? 'fas fa-times' : 'fas fa-bars';
+        }
+        function resetView() { if (objDesa && objDesa.layer) map.fitBounds(objDesa.layer.getBounds()); }
+        function locateUser() {
+            document.getElementById('btnLocate').classList.add('locating');
+            map.locate({ setView: true, maxZoom: 19, enableHighAccuracy: true });
+        }
+        const navToggler = document.querySelector('.navbar-toggler');
+        const navCollapse = document.getElementById('navbarNav');
+        navCollapse.addEventListener('show.bs.collapse', () => navToggler.classList.add('open'));
+        navCollapse.addEventListener('hide.bs.collapse', () => navToggler.classList.remove('open'));
+
+    </script>
+</body>
+
+</html>
